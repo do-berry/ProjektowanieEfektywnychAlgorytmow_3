@@ -2,6 +2,7 @@
 #include <climits>
 #include <windows.h>
 #include "Reader.h"
+#include "Genetic.h"
 #include <chrono> 
 #include <cstdlib>
 #include <ctime>
@@ -14,7 +15,8 @@ int main()
 	srand(time(NULL));
 
 	char choice;
-	Reader * reader;;
+	Reader * reader;
+	Genetic * genetic = new Genetic(10, 10, 10, 50, 50);
 	char name[] = "test.txt";
 	boolean isRead = false;					// czy graf jest wczytany
 
@@ -44,8 +46,20 @@ int main()
 			if (!isRead) {
 				cout << "Graf nie zostal wczytany." << endl;
 			}
-			else {
-				// todo
+			else {/*
+				int * child = new int[10], * solution = new int[10];
+				for (int i = 0; i < 10; i++) {
+					child[i] = i;
+				}
+				int * dupa = new int[10];
+				for (int i = 0; i < 10; i++) {
+					dupa[i] = child[9 - i];
+				}
+
+				genetic->printPath(child);
+				genetic->printPath(dupa);
+
+				genetic->oxCrossover(child, dupa);*/
 			}
 			break;
 		case '0':
