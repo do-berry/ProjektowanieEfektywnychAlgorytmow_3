@@ -3,9 +3,10 @@
 #include <windows.h>
 #include "Reader.h"
 #include "Genetic.h"
-#include <chrono> 
+#include <chrono>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
 
 using namespace std::chrono;
 using namespace std;
@@ -16,7 +17,7 @@ int main()
 
 	char choice;
 	Reader * reader;
-	Genetic * genetic = new Genetic(10, 10, 10, 50, 50);
+	Genetic * genetic = new Genetic(6, 10, 10, 50, 50);
 	char name[] = "test.txt";
 	boolean isRead = false;					// czy graf jest wczytany
 
@@ -46,20 +47,21 @@ int main()
 			if (!isRead) {
 				cout << "Graf nie zostal wczytany." << endl;
 			}
-			else {/*
-				int * child = new int[10], * solution = new int[10];
-				for (int i = 0; i < 10; i++) {
-					child[i] = i;
+			else {
+				vector<int> v;
+				for (int i = 0; i < 6; i++) {
+					v.push_back(i);
 				}
-				int * dupa = new int[10];
-				for (int i = 0; i < 10; i++) {
-					dupa[i] = child[9 - i];
+				Population p;
+				p.population = v;
+				p.cost = 3;
+				Population r;
+				for (int i = 0; i < 6; i++) {
+					r.population.push_back(5 - i);
 				}
-
-				genetic->printPath(child);
-				genetic->printPath(dupa);
-
-				genetic->oxCrossover(child, dupa);*/
+				r.cost = 5;
+				//cout << genetic->sumCosts(v, reader->tab) << endl;
+				genetic->oxCrossover(p, r, reader->tab);
 			}
 			break;
 		case '0':
