@@ -12,13 +12,15 @@ struct Population {
 class Genetic {
 private:
 	int size; // ile miast
-	int popSize; // wielkosc populacji
-	int stop; // maksymalna liczba pokolen - warunek zatrzymania
-	double mutationRate; // wspolczynnik mutacji
-	double crossoverRate; // wspolczynnik krzyzowania
-	int startIndex; // wierzcholek poczatkowy
-	int **population; // populacja
+	int popSize = 10; // wielkosc populacji
+	int stopTime = 10; // czas maksymalny - warunek zatrzymania
+	double mutationRate = 0.6; // wspolczynnik mutacji
+	double crossoverRate = 0.7; // wspolczynnik krzyzowania
+	double selectionRate = 0.3;
+	vector<Population> population; // populacja
 public:
+	Population solution;
+
 	Genetic();
 	Genetic(int size, int popSize, int stop, double mutationRate, double crossoverRate);
 	~Genetic();
@@ -26,12 +28,15 @@ public:
 	// operatory genetyczne
 	Population mutation(Population path, int **costs);
 	Population oxCrossover(Population firstParent, Population secondParent, int **costs);
-	//vector<Population> generatePopulation();
+	vector<Population> generatePopulation(int **costs);
 
 	/*   NOWE   */
-	bool compareCosts(const Population& first, const Population& second);
+	static bool compareCosts(const Population &first, const Population &second);
 	int sumCosts(vector<int> path, int **costs);
 	void printPath(vector<int> path);
+	void selection(vector<Population> &population);
+	void algorithm(int **costs);
+	double getStopTime(double stop, double start);
 };
 
 #endif // GENETIC_H

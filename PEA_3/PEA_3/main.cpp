@@ -17,7 +17,7 @@ int main()
 
 	char choice;
 	Reader * reader;
-	Genetic * genetic = new Genetic(6, 10, 10, 50, 50);
+	Genetic * genetic;
 	char name[] = "test.txt";
 	boolean isRead = false;					// czy graf jest wczytany
 
@@ -48,20 +48,12 @@ int main()
 				cout << "Graf nie zostal wczytany." << endl;
 			}
 			else {
-				vector<int> v;
-				for (int i = 0; i < 6; i++) {
-					v.push_back(i);
-				}
-				Population p;
-				p.population = v;
-				p.cost = 3;
-				Population r;
-				for (int i = 0; i < 6; i++) {
-					r.population.push_back(5 - i);
-				}
-				r.cost = 5;
-				//cout << genetic->sumCosts(v, reader->tab) << endl;
-				genetic->oxCrossover(p, r, reader->tab);
+				genetic = new Genetic(6, 10, 10, 0.6, 0.6);
+				genetic->algorithm(reader->tab);
+				genetic->printPath(genetic->solution.population);
+				cout << "cost: " << genetic->solution.cost << endl;
+
+				delete genetic;
 			}
 			break;
 		case '0':
