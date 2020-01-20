@@ -73,12 +73,11 @@ Population Genetic::mutation(Population path, int **costs) {
 	return path;
 }
 
-// krzyzowanie OX
+// krzyzowanie
 Population Genetic::oxCrossover(Population firstParent, Population secondParent, int **costs) {
-
 	Population child;
-	child.population.resize(size, -1); // {-1, -1, .. , -1}
 	child.cost = -1;
+	child.population.resize(size, -1);
 
 	vector<bool> visited;
 	visited.resize(size, false);
@@ -104,7 +103,7 @@ Population Genetic::oxCrossover(Population firstParent, Population secondParent,
 	}
 
 	child.cost = sumCosts(child.population, costs);
-
+	
 	return child;
 }
 
@@ -159,19 +158,29 @@ void Genetic::algorithm(int **costs) {
 	vector<int> path;
 
 	int globalPopSize = popSize;
+	//int counter = 0;
 	start = clock();
-	do {
-		for (int i = 0; i < globalPopSize; i++) {
+	//do {
+	for (int k = 0; k < 50; k++) {
+		//counter++;
+		//for (int i = 0; i < globalPopSize; i++) {
 			double random = double(rand()) / (double(RAND_MAX) + 1.0);
 
+			selection(population);
+			int howMany = globalPopSize - population.size();
 			if (random < crossoverRate) {
-				selection(population);
-				for (int j = 0; j < globalPopSize - 1; j++) {
-					Population child = oxCrossover(population.at(j), population.at(j + 1), costs);
+				//int first, second;
+				for (int j = 0; j < howMany; j++) {
+					int x, y;
+					do {
+						x = rand() % popSize;
+						y = rand() % popSize;
+					} while (x == y);
+					Population child = oxCrossover(population.at(x), population.at(y), costs);
 					population.push_back(child);
 				}
 			}
-		}
+		//}
 
 		for (int j = 0; j < population.size(); j++) {
 			mutation(population.at(j), costs);
@@ -181,15 +190,18 @@ void Genetic::algorithm(int **costs) {
 
 		while (population.size() > globalPopSize) {
 			population.pop_back();
+			popSize--;
 		}
 
-		stop = clock();
+		//stop = clock();
 
 		if (population.front().cost < solution.cost) {
 			solution.cost = population.front().cost;
 			solution.population = population.front().population;
 		}
-	} while (getStopTime(stop, start) <= stopTime);
+		//cout << "dupa " << counter << endl;
+	}; //while (getStopTime(stop, start) <= stopTime);
+	//cout << "dupa " << counter << endl;
 }
 
 double Genetic::getStopTime(double stop, double start) {

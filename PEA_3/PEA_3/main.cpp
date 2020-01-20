@@ -18,7 +18,7 @@ int main()
 	char choice;
 	Reader * reader;
 	Genetic * genetic;
-	char name[] = "test.txt";
+	char name[] = "tsp_6.txt";
 	boolean isRead = false;					// czy graf jest wczytany
 
 	cout << "Menu:" << endl;
@@ -48,7 +48,7 @@ int main()
 				cout << "Graf nie zostal wczytany." << endl;
 			}
 			else {
-				genetic = new Genetic(6, 10, 10, 0.6, 0.6);
+				genetic = new Genetic(reader->elementsNumber, 100, 90, 0.05, 0.8);
 				genetic->algorithm(reader->tab);
 				genetic->printPath(genetic->solution.population);
 				cout << "cost: " << genetic->solution.cost << endl;

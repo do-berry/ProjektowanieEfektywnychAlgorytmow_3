@@ -12,11 +12,11 @@ struct Population {
 class Genetic {
 private:
 	int size; // ile miast
-	int popSize = 10; // wielkosc populacji
-	int stopTime = 10; // czas maksymalny - warunek zatrzymania
-	double mutationRate = 0.6; // wspolczynnik mutacji
-	double crossoverRate = 0.7; // wspolczynnik krzyzowania
-	double selectionRate = 0.3;
+	int popSize = 300; // wielkosc populacji
+	int stopTime = 90; // czas maksymalny - warunek zatrzymania
+	double mutationRate = 0.1; // wspolczynnik mutacji
+	double crossoverRate = 0.9; // wspolczynnik krzyzowania
+	double selectionRate = 0.2;
 	vector<Population> population; // populacja
 public:
 	Population solution;
