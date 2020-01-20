@@ -24,15 +24,15 @@ public:
 	Genetic();
 	Genetic(int size, int popSize, int stop, double mutationRate, double crossoverRate);
 	~Genetic();
-	
+
 	// operatory genetyczne
 	Population mutation(Population path, int **costs);
-	Population oxCrossover(Population firstParent, Population secondParent, int **costs);
+	Population oxCrossover(Population &firstParent, Population &secondParent, int **costs);
 	vector<Population> generatePopulation(int **costs);
 
 	/*   NOWE   */
 	static bool compareCosts(const Population &first, const Population &second);
-	int sumCosts(vector<int> path, int **costs);
+	int sumCosts(vector<int> &path, int **costs);
 	void printPath(vector<int> path);
 	void selection(vector<Population> &population);
 	void algorithm(int **costs);

@@ -18,7 +18,7 @@ int main()
 	char choice;
 	Reader * reader;
 	Genetic * genetic;
-	char name[] = "tsp_6.txt";
+	char name[] = "ftv33.txt";
 	boolean isRead = false;					// czy graf jest wczytany
 
 	cout << "Menu:" << endl;
