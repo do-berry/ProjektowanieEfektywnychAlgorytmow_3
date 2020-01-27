@@ -11,10 +11,9 @@ using namespace std;
 
 Genetic::Genetic() {}
 
-Genetic::Genetic(int size, int popSize, int stop, double mutationRate, double crossoverRate) {
+Genetic::Genetic(int size, int popSize, double mutationRate, double crossoverRate) {
 	this->size = size;
 	this->popSize = popSize;
-	this->stopTime = stop;
 	this->mutationRate = mutationRate;
 	this->crossoverRate = crossoverRate;
 
@@ -31,6 +30,7 @@ bool Genetic::compareCosts(const Population &first, const Population &second) {
 	return (first.cost < second.cost);
 }
 
+// sumowanie kosztow 
 int Genetic::sumCosts(vector<int> &path, int **costs) {
 	int sum = 0;
 
@@ -47,6 +47,7 @@ int Genetic::sumCosts(vector<int> &path, int **costs) {
 	return sum;
 }
 
+// wypisywanie sciezki
 void Genetic::printPath(vector<int> path) {
 	for (int i = 0; i < size; i++)
 	{
@@ -54,10 +55,6 @@ void Genetic::printPath(vector<int> path) {
 	}
 	cout << path.at(0) << endl;
 }
-
-/*
-operatory genetyczne
-*/
 
 // mutacja: zamiana losowych wierzcholkow
 Population Genetic::mutation(Population path, int **costs) {
@@ -84,38 +81,25 @@ Population Genetic::oxCrossover(Population &firstParent, Population &secondParen
 	Population child;
 
 	int parentSize = firstParent.population.size();
-	//int pivot = rand() % parentSize;
-
-
-	//
-	// Copy first part.
-	//
-
+	// losowanie indeksu poczatkowego elementu
 	int beginIndex = rand() % (parentSize / 2);
 
-	for (int i = 0; i < parentSize / 2; ++i)
-	{
+	// kopiowanie polowy elementow z pierwszego rodzica do potomka
+	for (int i = 0; i < parentSize / 2; ++i) {
 		child.population.push_back(firstParent.population.at(beginIndex + i));
 	}
 
-	//
-	// Copy second part.
-	//
-
-	for (int i = 0; i < parentSize; ++i)
-	{
-		bool exist = false;
-		for (int j = 0; j < child.population.size(); ++j)
-		{
-			if (secondParent.population.at(i) == child.population.at(j))
-			{
-				exist = true;
+	// kopiowanie elementow nieobecnych z drugiego rodzica
+	for (int i = 0; i < parentSize; ++i) {
+		bool inPath = false;
+		for (int j = 0; j < child.population.size(); ++j) {
+			if (secondParent.population.at(i) == child.population.at(j)) {
+				inPath = true;
 				break;
 			}
 		}
 
-		if (!exist)
-		{
+		if (!inPath) {
 			child.population.push_back(secondParent.population.at(i));
 		}
 	}
@@ -123,66 +107,13 @@ Population Genetic::oxCrossover(Population &firstParent, Population &secondParen
 	child.cost = sumCosts(child.population, costs);
 
 	return child;
-
-	////for (int i = pivot; i < parentSize; i++)
-	////while(child.population.size() < firstParent.population.size()) // fix it
-	////{
-	//	for (int j = 0; j < parentSize; j++)
-	//	//while (child.population.size() < firstParent.population.size())
-	//	{
-	//		std::vector<int>::iterator itBegin = child.population.begin();
-	//		std::vector<int>::iterator itEnd = child.population.end();
-	//		std::vector<int>::iterator it = find(itBegin, itEnd, secondParent.population[j]);
-
-	//		if (it != itEnd)
-	//		{
-	//			child.population.push_back(*it);
-	//		}
-	//	}
-	////}
-
-
-
-	//for (int i = pivot; i < parentSize; i++)
-	//{
-	//	child.population.at(i) = firstParent.population.at(i);
-	//	//visited.at(firstParent.population.at(i)) = true;
-	//}
-
-	//vector<bool> visited;
-	//visited.resize(size, false);
-
-
-	//for (int i = 1; i < size - 1; i++) {
-	//	child.population.at(i) = firstParent.population.at(i);
-	//	visited.at(firstParent.population.at(i)) = true;
-	//}
-
-	//bool isStartVisited = false;
-	//for (int i = 0; i < size; i++) {
-	//	if (visited[secondParent.population.at(i)] == false) {
-	//		if (isStartVisited == false) {
-	//			child.population.at(0) = secondParent.population.at(i);
-	//			visited.at(secondParent.population.at(i)) = true;
-	//			isStartVisited = true;
-	//		}
-	//		else {
-	//			child.population.at(size - 1) = secondParent.population.at(i);
-	//			visited.at(secondParent.population.at(i)) = true;
-	//		}
-	//	}
-	//}
-
-	//child.cost = sumCosts(child.population, costs);
-	//
-	//return child;
 }
 
+// generowanie populacji poczatkowej
 vector<Population> Genetic::generatePopulation(int **costs) {
 	vector<Population> population;
 	Population p; // path + cost
 
-				  // popSize - wielkosc populacji
 	for (int i = 0; i < popSize; i++) {
 		// {0, 1, .. , n}
 		for (int j = 0; j < size; j++) {
@@ -201,85 +132,58 @@ vector<Population> Genetic::generatePopulation(int **costs) {
 	return population;
 }
 
+// selekcja
 void Genetic::selection(vector<Population> &population) {
-	//cout << "sorted:" << endl;
 	sort(population.begin(), population.end(), compareCosts);
 
-	// nowy rozmiar populacji
-	int newPopSize = population.size() * 0.5;//selectionRate;
-	vector<Population> newPopulation;
-
+	// wybieranie polowy elemnetow
 	int limit = population.size() / 2;
 
-	for (int i = 0; i < limit; i++)
+	for (int i = 0; i < limit; i++) {
 		population.pop_back();
-
-
-	//population.clear();
-	//
-	//population = newPopulation;
-	//popSize = newPopSize;
-
-	//newPopulation.clear();
+	}
 }
 
+// glowny algorytm
 void Genetic::algorithm(int **costs) {
-	clock_t start, stop;
 	vector<Population> population = generatePopulation(costs);
-	vector<int> path;
 
-	//int globalPopSize = popSize;
-	//int counter = 0;
-	start = clock();
-	//do {
-	for (int k = 0; k < 500; k++)
-	{
-		//counter++;
-		//for (int i = 0; i < globalPopSize; i++) {
-		//double random = double(rand()) / (double(RAND_MAX) + 1.0);
+	for (int k = 0; k < 5000; k++) {
+		double random = double(rand()) / (double(RAND_MAX) + 1.0);
 
+		// selekcja osobnikow
 		selection(population);
-		int parrentSize = population.size();
-		//int howMany = globalPopSize - population.size();
-		//if (random < crossoverRate) {
-		//int first, second;
-		for (int j = 0; j < size; j++)
-		{
-			int x, y;
-			do
-			{
-				x = rand() % parrentSize;
-				y = rand() % parrentSize;
-			} while (x == y);
-
-			Population child = oxCrossover(population.at(x), population.at(y), costs);
-			population.push_back(child);
+		int parentSize = population.size();
+		if (random < crossoverRate) {
+			for (int j = 0; j < size; j++) {
+				// losowanie rodzicow do krzyzowania
+				int x, y;
+				do {
+					x = rand() % parentSize;
+					y = rand() % parentSize;
+					if (parentSize == 1) {
+						break;
+					}
+				} while (x == y);
+				
+				// krzyzowanie
+				Population child = oxCrossover(population.at(x), population.at(y), costs);
+				population.push_back(child);
+			}
 		}
-		//}
-		//}
 
+		// mutacja
 		for (int j = 0; j < population.size(); j++) {
 			mutation(population.at(j), costs);
 		}
 
+		// sortowanie
 		sort(population.begin(), population.end(), compareCosts);
-
-		//while (population.size() > globalPopSize) {
-		//	population.pop_back();
-		//	popSize--;
-		//}
-
-		//stop = clock();
 
 		if (population.front().cost < solution.cost) {
 			solution.cost = population.front().cost;
 			solution.population = population.front().population;
 		}
-		//cout << "dupa " << counter << endl;
-	} //while (getStopTime(stop, start) <= stopTime);
-	  //cout << "dupa " << counter << endl;
+	}
 }
 
-double Genetic::getStopTime(double stop, double start) {
-	return (double(stop - start) / CLOCKS_PER_SEC);
-}

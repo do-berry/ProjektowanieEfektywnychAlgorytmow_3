@@ -18,12 +18,13 @@ int main()
 	char choice;
 	Reader * reader;
 	Genetic * genetic;
-	char name[] = "ftv33.txt";
+	char name[] = "tsp_10c.txt";
 	boolean isRead = false;					// czy graf jest wczytany
 
 	cout << "Menu:" << endl;
 	cout << "1. Wczytaj graf" << endl
 		<< "2. Wyswietl graf" << endl
+		<< "3. Algorytm genetyczny" << endl
 		<< "0. Wyjscie" << endl;
 
 	do {
@@ -48,7 +49,7 @@ int main()
 				cout << "Graf nie zostal wczytany." << endl;
 			}
 			else {
-				genetic = new Genetic(reader->elementsNumber, 100, 90, 0.05, 0.8);
+				genetic = new Genetic(reader->elementsNumber, 50, 0.2, 0.9);
 				genetic->algorithm(reader->tab);
 				genetic->printPath(genetic->solution.population);
 				cout << "cost: " << genetic->solution.cost << endl;
